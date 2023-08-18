@@ -1,0 +1,117 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 col-lg-3 col-xl-2">
+            <input type="text" class="form-control form-control-lg" type="text" name="search"
+              placeholder="Buscar Horario" [formControl]="search">
+          </div>
+          <div class="col-md-6 col-lg-9 col-xl-10 text-md-right mt-4 mt-md-0">
+            <button class="btn btn-primary ml-auto" (click)="openModal(itemFormModal, null)">Añadir Horario</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="card card-body">
+      <div class="table-responsive table-bordered">
+        <table class="table table-striped mb-0 no-wrap v-middle">
+          <thead>
+            <tr>
+              <th scope="col">Fecha de Atención</th>
+              <th scope="col">Hora de Inicio</th>
+              <th scope="col">Hora de Fin</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items">
+              <td>{{ item.horFechaAtencion }} </td>
+              <td>{{ item.horInicioAtencion }} </td>
+              <td>{{ item.horFinAtencion }} </td>
+              <td>{{ item.horEstado?"Activo":"Inactivo" }} </td>
+              <td>
+                <a href="javascript: void(0);" (click)="openModal(itemFormModal, item)" class="link mr-2"
+                  placement="top" ngbTooltip="Editar">
+                  <i-feather name="edit-2" class="feather-sm"></i-feather>
+                </a>
+                <a href="javascript: void(0);" class="link" (click)="delete(item.horId)" placement="top"
+                ngbTooltip="Eliminar">
+                <i-feather name="trash-2" class="feather-sm"></i-feather>
+              </a>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="justify-content-center mt-2">
+        <ngb-pagination [(page)]="indexParameters.pageIndex" [pageSize]="indexParameters.pageSize"
+          [collectionSize]="indexParameters.length" (pageChange)="changePagination($event)" maxSize="20" size="sm"
+          rotate="true"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #itemFormModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="itemFormLabel">{{anadirEditar}} Horario</h5>
+    <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Fecha de Atención *</label>
+        <div class="col-sm-8">
+          <input type="date" class="form-control" formControlName="horFechaAtencion">
+          <span class="help-block" *ngIf="formsErrors.horFechaAtencion">
+            {{formsErrors.horFechaAtencion}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Hora de Inicio *</label>
+        <div class="col-sm-8">
+          <input type="time" class="form-control" formControlName="horInicioAtencion">
+          <span class="help-block" *ngIf="formsErrors.horInicioAtencion">
+            {{formsErrors.horInicioAtencion}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Hora de Fin *</label>
+        <div class="col-sm-8">
+          <input type="time" class="form-control" formControlName="horFinAtencion">
+          <span class="help-block" *ngIf="formsErrors.horFinAtencion">
+            {{formsErrors.horFinAtencion}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="custom-control custom-checkbox mr-sm-2">
+          <input type="checkbox" class="custom-control-input" id="checkbox1" formControlName="horEstado">
+          <label class="custom-control-label" for="checkbox1">Activo</label>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Cerrar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">Guardar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

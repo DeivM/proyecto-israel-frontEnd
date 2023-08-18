@@ -1,0 +1,417 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 col-lg-3 col-xl-2">
+            <input type="text" class="form-control form-control-lg" type="text" name="search"
+              placeholder="Buscar Candidata" [formControl]="search">
+          </div>
+          <div class="col-md-6 col-lg-9 col-xl-10 text-md-right mt-4 mt-md-0">
+            <button class="btn btn-primary ml-auto" (click)="openModal(itemFormModal, null)">Añadir Candidata</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center" *ngIf='items && items.length'>
+  <div class="col-md-4" *ngFor="let item of items ">
+    <div class="card">
+      <div class="card-body text-center">
+        <img src="{{ apiUrl+item.ifiUrl }}" class="imagenes border p-1" width="80">
+        <h4 class="card-title mt-3 mb-0">{{ item.fiiNombres }} {{ item.fiiApellidos }}</h4>
+        <small class="text-muted">{{item.fiiIdentificacion }}</small>
+        <div class="mt-3">
+
+
+          <button type="button" class="btn btn-info" (click)="openModal(itemFormModal, item)">Editar</button>
+
+         
+
+          <button type="button" class="btn btn-danger" (click)="delete(item.fiiId)">Eliminar</button>
+        </div>
+        <div class="mt-3 pt-3">
+          <address>
+            {{ item.carNombre }}
+            <br />
+            <br />
+            <i class="fas fa-mobile-alt mr-2"></i>{{ item.fiiTelefono }}
+          </address>
+        </div>
+      </div>
+      <div class="d-flex text-center justify-content-md-center bg-light border-top">
+        <div class="col-3 border-right border-bottom py-2" *ngIf="item.fiiUrlInstagram">
+          <a href="{{item.fiiUrlInstagram}}" class="link" target="_blank">
+            <i class="icon-social-instagram m-r-10"></i>
+
+          </a>
+        </div>
+        <div class="col-3 border-right border-bottom py-2" *ngIf="item.fiiUrlYoutube">
+          <a href="{{item.fiiUrlYoutube}}" class="link" target="_blank">
+            <i class="fab fa-youtube m-r-10"></i>
+
+          </a>
+        </div>
+        <div class="col-3 py-2 border-bottom" *ngIf="item.fiiUrlFacebook">
+          <a href="{{item.fiiUrlFacebook}}" class="link" target="_blank">
+            <i class="icon-social-facebook m-r-10"></i>
+
+          </a>
+        </div>
+        <div class="col-3 py-2 border-bottom" *ngIf="item.fiiUrlTiktok">
+          <a href="{{item.fiiUrlTiktok}}" class="link" target="_blank">
+            <i class="fa-brands fa-tiktok m-r-10"></i>
+
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+<div class="row">
+  <div class="col-12">
+    <div class="card card-body">
+
+      <div class="d-flex mb-3 mt-3">
+        <input type="text" class="form-control w-25" placeholder="Buscar por n. documento o por cliente"
+          [formControl]="search" autocomplete="off">
+
+        <button class="btn btn-primary ml-auto" (click)="openModal(itemFormModal, null)">Añadir Candidata</button>
+      </div>
+      <div class="table-responsive table-bordered">
+        <table class="table table-striped mb-0 no-wrap v-middle">
+          <thead>
+            <tr>
+
+              <th scope="col">Nombres</th>
+              <th scope="col">Identificación</th>
+              <th scope="col">Teléfono</th>
+              <th scope="col">Email</th>
+              <th scope="col">Carrera</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items">
+              <td>{{ item.fiiNombres }} {{ item.fiiApellidos }}</td>
+              <td>{{ item.fiiIdentificacion }}</td>
+              <td>{{ item.fiiTelefono }}</td>
+              <td>{{ item.fiiEmail }}</td>
+              <td>{{ item.carNombre }}</td>
+
+              <td>
+                <a href="javascript: void(0);" (click)="openModal(itemFormModal, item)" class="link mr-2"
+                  placement="top" ngbTooltip="Edit">
+                  <i-feather name="edit-2" class="feather-sm"></i-feather>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="justify-content-center mt-2">
+        <ngb-pagination [(page)]="indexParameters.pageIndex" [pageSize]="indexParameters.pageSize"
+          [collectionSize]="indexParameters.length" (pageChange)="changePagination($event)" maxSize="20" size="sm"
+          rotate="true"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+-->
+
+<ng-template #itemFormModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="itemFormLabel">{{anadirEditar}} Ficha Inscripción</h5>
+
+    <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="eveId" class="col-sm-4 col-form-label">Evento *</label>
+        <div class="col-sm-8">
+          <select class="custom-select" formControlName='eveId' id="eveId">
+            <option value="">Seleccionar </option>
+            <option *ngFor="let item of evento " [value]="item.id"> {{item?.nombre}}</option>
+          </select>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Primer Nombre *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control textoPrimeraLetraMinuscula" formControlName="fiiNombres" >
+          <span class="help-block" *ngIf="formsErrors.fiiNombres">
+            {{formsErrors.fiiNombres}}
+          </span>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label for="fiiApellidos" class="col-sm-4 col-form-label">Primer Apellido *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control textoMayuscula" formControlName="fiiApellidos" id="fiiApellidos">
+          <span class="help-block" *ngIf="formsErrors.fiiApellidos">
+            {{formsErrors.fiiApellidos}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="email" class="col-sm-4 col-form-label">Identificación *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="fiiIdentificacion" id="fiiIdentificacion">
+          <span class="help-block" *ngIf="formsErrors.fiiIdentificacion">
+            {{formsErrors.fiiIdentificacion}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="fiiTelefono" class="col-sm-4 col-form-label">Teléfono *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="fiiTelefono" id="fiiTelefono">
+          <span class="help-block" *ngIf="formsErrors.fiiTelefono">
+            {{formsErrors.fiiTelefono}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="fiiEmail" class="col-sm-4 col-form-label">Email *</label>
+        <div class="col-sm-8">
+          <input class="form-control" formControlName="fiiEmail" id="fiiEmail">
+          <span class="help-block" *ngIf="formsErrors.fiiEmail">
+            {{formsErrors.fiiEmail}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="fiiFechaNacimiento" class="col-sm-4 col-form-label">Fecha Nacimiento *</label>
+        <div class="col-sm-8">
+          <input type="date" class="form-control" formControlName="fiiFechaNacimiento" id="fiiFechaNacimiento">
+          <span class="help-block" *ngIf="formsErrors.fiiFechaNacimiento">
+            {{formsErrors.fiiFechaNacimiento}}
+          </span>
+        </div>
+      </div>
+
+      
+
+      <div class="form-group row">
+        <label for="carId" class="col-sm-4 col-form-label">Carrera *</label>
+        <div class="col-sm-8">
+          <select class="custom-select" formControlName='carId' id="carId">
+            <option value="">Seleccionar </option>
+            <option *ngFor="let item of carreras " [value]="item.id"> {{item?.nombre}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="fiiUrlYoutube" class="col-sm-4 col-form-label">Youtube</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="fiiUrlYoutube" id="fiiUrlYoutube">
+          <span class="help-block" *ngIf="formsErrors.fiiUrlYoutube">
+            {{formsErrors.fiiUrlYoutube}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="fiiUrlInstagram" class="col-sm-4 col-form-label">Instagram</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="fiiUrlInstagram" id="fiiUrlInstagram">
+          <span class="help-block" *ngIf="formsErrors.fiiUrlInstagram">
+            {{formsErrors.fiiUrlInstagram}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="fiiUrlFacebook" class="col-sm-4 col-form-label">Facebook</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="fiiUrlFacebook" id="fiiUrlFacebook">
+          <span class="help-block" *ngIf="formsErrors.fiiUrlFacebook">
+            {{formsErrors.fiiUrlFacebook}}
+          </span>
+        </div>
+      </div>
+      
+      <div class="form-group row">
+        <label for="fiiUrlTiktok" class="col-sm-4 col-form-label">Tiktok</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="fiiUrlTiktok" id="fiiUrlTiktok">
+          <span class="help-block" *ngIf="formsErrors.fiiUrlTiktok">
+            {{formsErrors.fiiUrlTiktok}}
+          </span>
+        </div>
+      </div>
+
+      <div class="taskboard page-height p-0" style="width:100% !important;">
+        <div class="taskboard-wrapper todos" style="width:100% !important;">
+          <div class="taskboard-list">
+            <h6 class="taskboard-header font-weight-bold mt-2">Hobbies</h6>
+            <div class="taskboard-cards" >
+              <div class="taskboard-task cursor-pointer" >
+                <div class="taskboard-task-title font-medium"></div>
+                <small class="card-text text-muted"></small>
+                <div class="mt-2 d-flex justify-content-start align-items-center">
+                  
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th style="width: 100% !important;">
+                          Descripción
+                        </th>
+                        <th>
+                          <button class="btn btn-primary ml-auto" type="button"
+                            (click)="addHobbies(itemHobbies)">Añadir</button>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let hobbies of hobbiesArray.controls; let i = index" [formGroup]="hobbies">
+                        <td>
+    
+                          <textarea class="form-control" formControlName="hobDescripcion" rows="3" cols="50">
+              </textarea>
+    
+                        </td>
+                        <td>
+                          <button class="btn btn-danger ml-auto" type="button" (click)="deleteHobbies(i)">Eliminar</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <div class="taskboard page-height p-0" style="width:100% !important;">
+          <div class="taskboard-wrapper todos" style="width:100% !important;">
+            <div class="taskboard-list">
+              <h6 class="taskboard-header font-weight-bold mt-2">Motivaciones</h6>
+              <div class="taskboard-cards" >
+                <div class="taskboard-task cursor-pointer" >
+                  <div class="taskboard-task-title font-medium"></div>
+                  <small class="card-text text-muted"></small>
+                  <div class="mt-2 d-flex justify-content-start align-items-center">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th style="width: 100% !important;">
+                            Descripción
+                          </th>
+                          <th>
+                            <button class="btn btn-primary ml-auto" type="button"
+                              (click)="addMotivaciones(itemMotivaciones)">Añadir</button>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let motivaciones of motivacionesArray.controls; let i = index" [formGroup]="motivaciones">
+                          <td>
+                            <textarea class="form-control" formControlName="motDescripcion" rows="3" cols="50">
+                          </textarea>
+                          </td>
+                          <td>
+                            <button class="btn btn-danger ml-auto" type="button"
+                              (click)="deleteMotivaciones(i)">Eliminar</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+      
+          <div class="taskboard page-height p-0" style="width:100% !important;">
+            <div class="taskboard-wrapper todos" style="width:100% !important;">
+              <div class="taskboard-list">
+                <h6 class="taskboard-header font-weight-bold mt-2">Subir Imágenes</h6>
+                <div class="taskboard-cards" >
+                  <div class="taskboard-task cursor-pointer" >
+                    <div class="taskboard-task-title font-medium"></div>
+                    <small class="card-text text-muted"></small>
+                    <div class="mt-2 d-flex justify-content-start align-items-center">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th style="width: 100% !important;">
+                              Imágen
+                            </th>
+                            <th>
+                              Imágen principal
+                            </th>
+                            <th>
+                              <button class="btn btn-primary ml-auto" type="button"
+                                (click)="addImagenFichaInscripcion(itemFichaInscripcion)">Añadir</button>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let imagenFichaInscripcion of imagenFichaInscripcionArray.controls; let i = index"
+                            [formGroup]="imagenFichaInscripcion">
+                            <td>
+                              <div class="form-group row">
+                                <div class="col-sm-12">
+                                  <input type="file" style="display: none" (change)="preview(filevar.files, i)" #filevar />
+
+                                  
+                                  <img *ngIf="imagenFichaInscripcion.get('nuevo').value " src="{{imagenFichaInscripcion.get('url').value}}"
+                                    class="rounded-circle image cursor-pointer" alt="" height="100px" width="100px"
+                                    (click)="filevar.click()" />
+
+                                    <img *ngIf="!imagenFichaInscripcion.get('nuevo').value" src="{{apiUrl+imagenFichaInscripcion.get('ifiUrl').value}}"
+                                    class="rounded-circle image cursor-pointer" alt="" height="100px" width="100px"
+                                    (click)="filevar.click()" />
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <fieldset class="checkbox">
+                                <label>
+                                    <input type="checkbox" formControlName="ifiPrincipal" > 
+                                </label>
+                            </fieldset>
+                            </td>
+                            <td>
+                              <button class="btn btn-danger ml-auto" type="button"
+                                (click)="deleteFichaInscricion(i)">Eliminar</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Cerrar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">Guardar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

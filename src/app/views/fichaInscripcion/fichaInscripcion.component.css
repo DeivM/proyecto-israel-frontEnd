@@ -1,0 +1,52 @@
+.viewport::ng-deep video {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+  }
+
+  .tabla-detalle-popup
+{
+  width: 100% ;
+  text-align: left !important;
+}
+
+.image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.table th
+{
+  width: 50% !important ;
+}
+
+
+/*.texto-inscripcion{
+
+  text-transform: lowercase;
+  
+  }*/
+  
+  
+  
+  .textoPrimeraLetraMinuscula {
+    text-transform: capitalize;
+  }
+
+  .textoMayuscula { text-transform: uppercase;}   
+
+
+  .imagenes {
+
+    height: 150px;
+    
+    width: 150px;
+    
+    object-fit: cover;
+    
+    }

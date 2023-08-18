@@ -1,0 +1,181 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 col-lg-3 col-xl-2">
+            <input type="text" class="form-control form-control-lg" type="text" name="search"
+              placeholder="Buscar Cita" [formControl]="search">
+          </div>
+          <div class="col-md-6 col-lg-9 col-xl-10 text-md-right mt-4 mt-md-0">
+            <button class="btn btn-primary ml-auto" (click)="openModal(itemFormModal, null)">Añadir Cita</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="card card-body">
+     <div class="table-responsive table-bordered">
+        <table class="table table-striped mb-0 no-wrap v-middle">
+          <thead>
+            <tr>
+              <th scope="col">Paciente</th>
+              <th scope="col">Especialidad</th>
+              <th scope="col">Médico</th>
+              <th scope="col">Fecha de atención</th>
+              <th scope="col">Hora de Inicio</th>
+              <th scope="col">Hora de Fin</th>
+              <th scope="col">Estado de Paciente</th>
+              <th scope="col">Observaciones</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items">
+              
+              <td>{{ item.usuNombres }} </td>
+              <td>{{ item.espNombre }} </td>
+              <td>{{ item.medNombres }} </td>
+              <td>{{ item.citFechaAtencion }} </td>
+              <td>{{ item.citInicioAtencion }} </td>
+              <td>{{ item.citFinAtencion }} </td>
+              <td>{{ item.citEstadoPaciente }} </td>
+              <td>{{ item.citObservaciones }} </td>
+              <td>{{ item.citEstado?"Activo":"Inactivo" }} </td>
+              <td>
+                <a href="javascript: void(0);" (click)="openModal(itemFormModal, item)" class="link mr-2"
+                  placement="top" ngbTooltip="Editar">
+                  <i-feather name="edit-2" class="feather-sm"></i-feather>
+                </a>
+                <a href="javascript: void(0);" class="link" (click)="delete(item.citId)" placement="top"
+                ngbTooltip="Eliminar">
+                <i-feather name="trash-2" class="feather-sm"></i-feather>
+              </a>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="justify-content-center mt-2">
+        <ngb-pagination [(page)]="indexParameters.pageIndex" [pageSize]="indexParameters.pageSize"
+          [collectionSize]="indexParameters.length" (pageChange)="changePagination($event)" maxSize="20" size="sm"
+          rotate="true"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #itemFormModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="itemFormLabel">{{anadirEditar}} Cita</h5>
+    <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group row">
+        <label for="usuId" class="col-sm-4 col-form-label">Paciente *</label>
+        <div class="col-sm-8">
+          <select class="custom-select" formControlName='usuId' id="usuId">
+            <option value="">Seleccionar </option>
+            <option *ngFor="let item of pacientes " [value]="item.id"> {{item?.nombre}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="espId" class="col-sm-4 col-form-label">Especialidad *</label>
+        <div class="col-sm-8">
+          <select class="custom-select" formControlName='espId' id="espId">
+            <option value="">Seleccionar </option>
+            
+            <option *ngFor="let item of medicosEspecialidad " [value]="item.id" (click)="buscarMedico(item.id)"> {{item?.nombre}}</option>
+          
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="mesId" class="col-sm-4 col-form-label">Médico *</label>
+        <div class="col-sm-8">
+          <select class="custom-select" formControlName='mesId' id="mesId">
+            <option value="">Seleccionar </option>
+            <option *ngFor="let item of medicos " [value]="item.id"> {{item?.nombre}}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Fecha de atención *</label>
+        <div class="col-sm-8">
+          <input type="date" class="form-control" formControlName="citFechaAtencion">
+          <span class="help-block" *ngIf="formsErrors.citFechaAtencion">
+            {{formsErrors.citFechaAtencion}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Hora de Inicio *</label>
+        <div class="col-sm-8">
+          <input type="time" class="form-control" formControlName="citInicioAtencion">
+          <span class="help-block" *ngIf="formsErrors.citInicioAtencion">
+            {{formsErrors.citInicioAtencion}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Hora de Fin *</label>
+        <div class="col-sm-8">
+          <input type="time" class="form-control" formControlName="citFinAtencion">
+          <span class="help-block" *ngIf="formsErrors.citFinAtencion">
+            {{formsErrors.citFinAtencion}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Estado de Paciente *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control textoPrimeraLetraMinuscula" formControlName="citEstadoPaciente">
+          <span class="help-block" *ngIf="formsErrors.citEstadoPaciente">
+            {{formsErrors.citEstadoPaciente}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Observaciones *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control textoPrimeraLetraMinuscula" formControlName="citObservaciones">
+          <span class="help-block" *ngIf="formsErrors.citObservaciones">
+            {{formsErrors.citObservaciones}}
+          </span>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <div class="custom-control custom-checkbox mr-sm-2">
+          <input type="checkbox" class="custom-control-input" id="checkbox1" formControlName="citEstado">
+          <label class="custom-control-label" for="checkbox1">Activo</label>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Cerrar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">Guardar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

@@ -1,0 +1,36 @@
+.viewport::ng-deep video {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+  }
+
+  .tabla-detalle-popup
+{
+  width: 100% ;
+  text-align: left !important;
+}
+
+.image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.table th
+{
+  width: 50% !important ;
+}
+
+.imagenes {
+
+  height: 60px;
+  
+  width: 60px;
+  
+  object-fit: cover;
+  
+  }

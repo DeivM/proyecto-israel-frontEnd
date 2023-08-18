@@ -1,0 +1,143 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 col-lg-3 col-xl-2">
+            <input type="text" class="form-control form-control-lg" type="text" name="search"
+              placeholder="Buscar Receta" [formControl]="search">
+          </div>
+          <div class="col-md-6 col-lg-9 col-xl-10 text-md-right mt-4 mt-md-0">
+            <button class="btn btn-primary ml-auto" (click)="openModal(itemFormModal, null)">Añadir Recetas</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="card card-body">
+
+    
+      <div class="table-responsive table-bordered">
+        <table class="table table-striped mb-0 no-wrap v-middle">
+          <thead>
+            <tr>
+              <th scope="col">Nombre de receta</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Tipo de ración</th>
+              <th scope="col">Valor Calórico</th>
+              <th scope="col">Imagen url</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items">
+              <td>{{ item.aliNombre }} </td>
+              <td>{{ item.aliDescripcion }} </td>
+              <td>{{ item.aliCategoria }} </td>
+              <td>{{ item.aliServicio }} </td>
+              <td>{{ item.aliCalorias }} </td>
+              <td>{{ item.aliUrl}} </td>
+              <td>
+                <a href="javascript: void(0);" (click)="openModal(itemFormModal, item)" class="link mr-2"
+                  placement="top" ngbTooltip="Editar">
+                  <i-feather name="edit-2" class="feather-sm"></i-feather>
+                </a>
+                <a href="javascript: void(0);" class="link" (click)="delete(item.aliId)" placement="top"
+                ngbTooltip="Eliminar">
+                <i-feather name="trash-2" class="feather-sm"></i-feather>
+              </a>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="justify-content-center mt-2">
+        <ngb-pagination [(page)]="indexParameters.pageIndex" [pageSize]="indexParameters.pageSize"
+          [collectionSize]="indexParameters.length" (pageChange)="changePagination($event)" maxSize="20" size="sm"
+          rotate="true"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #itemFormModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="itemFormLabel">{{anadirEditar}} Alimento</h5>
+    <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Nombre de receta *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="aliNombre">
+          <span class="help-block" *ngIf="formsErrors.aliNombre">
+            {{formsErrors.aliNombre}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Descripción</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control textoPrimeraLetraMinuscula" formControlName="aliDescripcion">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Categoria *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="aliCategoria">
+          <span class="help-block" *ngIf="formsErrors.aliCategoria">
+            {{formsErrors.aliCategoria}}
+          </span>
+        </div>
+      </div>
+  
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Tipo de ración *</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="aliServicio">
+          <span class="help-block" *ngIf="formsErrors.aliServicio">
+            {{formsErrors.aliServicio}}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Valor Calórico *</label>
+        <div class="col-sm-8">
+          <input type="number" class="form-control"  formControlName="aliCalorias">
+          <span class="help-block" *ngIf="formsErrors.aliCalorias">
+            {{formsErrors.aliCalorias}}
+          </span>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Imagen Url</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="aliUrl">
+        </div>
+      </div>
+    
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Cerrar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="itemForm.invalid">Guardar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

@@ -1,0 +1,38 @@
+<div class="card">
+
+<div class="table-responsive">
+  <table class="table no-wrap v-middle">
+      <thead>
+          <tr class="border-0" style="width: 5px !important;">
+              <th class="border-0">Candidatas</th>
+              <th class="border-0">Número de Votos</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+              <td style="width: 5px !important;">
+                <div class="d-flex align-items-center" >
+                  <div class="m-r-10">
+                      <img src="{{ apiUrl+item.ifiUrl }}" alt="user" class="imagenes"  />
+                  </div>
+                  <div class="">
+                      <h5 class="m-b-0 font-16 font-medium">{{ item.fiiNombres }} {{ item.fiiApellidos }}</h5>
+                      <span>    {{ item.carNombre }}</span>
+                  </div>
+                  
+              </div>
+             
+                
+              </td>
+              <td>
+                <p>
+                  <ngb-progressbar type="info" value="{{item.totalVotaciones}}" height="50px" textType="white"><span style="font-size: 18px;"><strong> {{item.totalVotaciones}} </strong> </span></ngb-progressbar>   
+                </p>
+              </td>
+             
+          </tr>
+         
+      </tbody>
+  </table>
+</div>
+</div>
